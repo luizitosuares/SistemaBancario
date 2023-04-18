@@ -1,41 +1,41 @@
 package contas;
 
-public class ContaCorrente 
+public class ContaCorrente extends Conta{
 
-{
+	private double saldo;
 
-	public class ContaCorrente extends Conta {
-	private String tipo = "corrente";
 
-	public ContaCorrente(String cpfTitular, String agencia)
-	
-	{
-	   super(cpfTitular, agencia);
-	}
-
-	
-	public void sacar(double valor) 
-	
-	{
+	public ContaCorrente(String nome, String cpf, Integer senha, String email, Integer telefone, String endereco) {
+		super(nome, cpf, senha, email, telefone, endereco);
 		
-	double saldo = getSaldo();
-	     
-	if (saldo >= valor) 
-	
-	{
-	            saldo -= valor;
-	            super.depositar(saldo);
-	} 
-	
-	else 
-	
-	{
-	  System.out.println("Saldo insuficiente!");
-	}
-	    
-	
-	}
 	}
 	
+		public void sacar(double valor) {
+				
+				if (valor <= 0) {
+					System.out.println("Valor inválido para saque.");
+					
+				} else if (valor > this.saldo) {
+					System.out.println("Saldo insuficiente.");
+					
+				} else {
+					this.saldo -= valor;
+					System.out.println("Saque realizado com sucesso!");
+				}
+			}
+			
+			
+			public void depositar(double valor) {
+				
+				if (valor <= 0) {
+					System.out.println("Valor inválido para depósito.");
+					
+				} else {
+					this.saldo += valor;
+					System.out.println("Depósito realizado com sucesso!");
+				}
+			}
+			
+			
 
 }

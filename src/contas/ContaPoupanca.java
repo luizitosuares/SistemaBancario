@@ -1,33 +1,34 @@
 package contas;
 
-public class ContaPoupanca 
-{
-	
-	
-	private String tipo = "poupança";
+public class ContaPoupanca extends Conta {
 
-    public ContaPoupanca(String cpfTitular, String agencia) 
-    
-    {
-        super(cpfTitular, agencia);
-    }
+	private double saldo;
 
-   
-    public void sacar(double valor) 
-    {
-        double saldo = getSaldo();
-        if (saldo >= valor) {
-            saldo -= valor;
-            super.depositar(saldo);
-    } 
-        
-        else 
-    
-    {
-            System.out.println("Saldo insuficiente");
-        
-    }
-    
-    }
+	public ContaPoupanca(String nome, String cpf, Integer senha, String email, Integer telefone, String endereco) {
+		super(nome, cpf, senha, email, telefone, endereco);
+		
+	}
+	
+	public void sacar(double valor) {
+
+		if (valor <= 0) {
+			System.out.println("Valor inválido para saque.");
+
+		} else if (valor > this.saldo) {
+			System.out.println("Saldo insuficiente.");
+
+		} else {
+			this.saldo -= valor;
+			System.out.println("Saque realizado com sucesso!");
+		}
+	}
+
+	public void depositar(double valor) {
+
+		this.saldo += valor;
+		System.out.println("Depósito realizado com sucesso!");
+
+	}
+
 
 }
