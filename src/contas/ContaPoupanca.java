@@ -1,34 +1,37 @@
 package contas;
 
-public class ContaPoupanca extends Conta {
+import java.util.Scanner;
 
+public class ContaPoupanca extends Conta  {
+
+	Scanner read = new Scanner(System.in);
 	private double saldo;
+	public final double TAXA_RENDIMENTO = 0.1;
 
-	public ContaPoupanca(String nome, String cpf, Integer senha, String email, Integer telefone, String endereco) {
-		super(nome, cpf, senha, email, telefone, endereco);
+	public double geraRelatorioRendimento() {
+
+		int diasInvestidos;
+		double rendimento = 0;
+		double valorAplicado;
+
+		System.out.println("Qual capital será investido");
+		 valorAplicado = read.nextDouble();
+
+		System.out.println("Informe a quantidade de dias que o capital ficará aplicado: ");
+		 diasInvestidos = read.nextInt();
+
+		rendimento = (valorAplicado * 0.022) + diasInvestidos;
+		return rendimento;
+
+	}
+	public void sacar() {
 		
 	}
-	
-	public void sacar(double valor) {
-
-		if (valor <= 0) {
-			System.out.println("Valor inválido para saque.");
-
-		} else if (valor > this.saldo) {
-			System.out.println("Saldo insuficiente.");
-
-		} else {
-			this.saldo -= valor;
-			System.out.println("Saque realizado com sucesso!");
-		}
+	public void tranferir() {
+		
 	}
-
-	public void depositar(double valor) {
-
-		this.saldo += valor;
-		System.out.println("Depósito realizado com sucesso!");
-
+	public void depositar() {
+		
 	}
-
 
 }
