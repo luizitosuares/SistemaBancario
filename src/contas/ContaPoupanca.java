@@ -30,21 +30,67 @@ public class ContaPoupanca extends Conta {
 
 	}
 
-	public void sacar() {
+	//aqui	
+	public boolean sacar(double valor) {
 
+		if (valor <= 0) {
+			System.out.println("Valor inválido para saque.");
+
+		} else if (valor > this.saldo) {
+			System.out.println("Saldo insuficiente.");
+
+		} else {
+			this.saldo -= valor;
+			System.out.println("Saque realizado com sucesso.");
+			return true;
+		}
+		return false;
 	}
 
-	public void tranferir() {
+	public boolean depositar(double valor) {
 
+		if (valor <= 0) {
+			System.out.println("Valor inválido para depósito.");
+			return false;
+		} else {
+			this.saldo += valor;
+			System.out.println("Depósito realizado com sucesso!");
+			return true;
+		}
+	
+	}
+	
+	public void transferir(double valor, Conta destino) {
+	    
+		if (valor <= 0) {
+	        System.out.println("Valor inválido para transferência.");
+	        
+	    } else if (valor > this.saldo) {
+	        System.out.println("Saldo insuficiente para realizar a transferência.");
+	        
+	    } else {
+	        double valorTransferencia = valor;
+	        this.saldo -= valorTransferencia;
+	        destino.depositar(valor);
+	        System.out.println("Transferência realizada com sucesso!");
+	    }
 	}
 
-	public void depositar() {
-
-	}
 
 	@Override
 	public String toString() {
 		return "ContaPoupanca [numero=" + numero + ", titular=" + titular + ", saldo=" + saldo + ", tipo=" + tipo + "]";
+	}
+
+	@Override
+	public void relatorio() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean sacar() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

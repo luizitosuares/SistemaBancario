@@ -50,13 +50,28 @@ public abstract class Conta implements Aplicacao {
 		this.tipo = tipo;
 	}
 
-	public void sacar() {
+	public boolean sacar(double valor) {
+		return false;
+		
 	}
 
-	public void depositar() {
+	public boolean depositar(double valor) {
+		return false;
 	}
 
-	public void transferir() {
+	public void transferir(double valor, Conta contaDestino) {
+		
+		if(this.saldo < valor) {
+            System.out.println("Seu saldo é insuficiente!");
+        }
+        else {
+            this.saldo -= valor;
+            contaDestino.saldo += valor;
+
+
+            System.out.println("Seu saldo é de: " + this.saldo);
+        }
+		
 	}
 
 	@Override
@@ -74,6 +89,11 @@ public void relatorio(Double valorSaque, Double valorDeposito, Double valorTrans
 	
 // Adicionalmente deverão ser informados os valores que o banco
 	//cobra por cada operação bancária;
+}
+
+public void relatorio() {
+	// TODO Auto-generated method stub
+	
 }
 
 }

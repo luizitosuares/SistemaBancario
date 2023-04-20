@@ -1,10 +1,12 @@
 package interfaces;
 
+import contas.Conta;
+
 public interface Aplicacao {
 
-	public void sacar ();
-	public void transferir();
-	public void depositar();
+	public boolean sacar ();
+	public void transferir(double valor, Conta contaDestino);
+	public boolean depositar();
 	public void relatorio();
 	
 }
