@@ -5,6 +5,7 @@ import pessoa.Pessoa;
 
 public abstract class Conta implements Aplicacao {
 
+	
 	protected int numero;
 	protected Pessoa titular;
 	protected double saldo;
@@ -59,18 +60,9 @@ public abstract class Conta implements Aplicacao {
 		return false;
 	}
 
-	public void transferir(double valor, Conta contaDestino) {
+	public boolean transferir(double valor, Conta contaDestino) {
+		return false;
 		
-		if(this.saldo < valor) {
-            System.out.println("Seu saldo é insuficiente!");
-        }
-        else {
-            this.saldo -= valor;
-            contaDestino.saldo += valor;
-
-
-            System.out.println("Seu saldo é de: " + this.saldo);
-        }
 		
 	}
 
@@ -79,9 +71,7 @@ public abstract class Conta implements Aplicacao {
 		return "Conta [numero=" + numero + ", titular=" + titular + ", saldo=" + saldo + ", tipo=" + tipo + "]";
 	}
 
-
-
-public void relatorio(Double valorSaque, Double valorDeposito, Double valorTransferenciaRemetente) {
+	public void relatorio(Double valorSaque, Double valorDeposito, Double valorTransferenciaRemetente) {
 	
 	Double total;
 	
@@ -91,9 +81,7 @@ public void relatorio(Double valorSaque, Double valorDeposito, Double valorTrans
 	//cobra por cada operação bancária;
 }
 
-public void relatorio() {
-	// TODO Auto-generated method stub
-	
-}
-
+	public void extrato() {
+		
+	}
 }
