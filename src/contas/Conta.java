@@ -1,5 +1,7 @@
 package contas;
 
+import java.io.IOException;
+
 import interfaces.Aplicacao;
 import pessoa.Pessoa;
 
@@ -10,13 +12,17 @@ public abstract class Conta implements Aplicacao {
 	protected Pessoa titular;
 	protected double saldo;
 	protected TipoConta tipo;
+	protected Agencias agencia;
+	
+	
 
-	public Conta(int numero, Pessoa titular, double saldo, TipoConta tipo) {
+	public Conta(int numero, Pessoa titular, double saldo, TipoConta tipo, Agencias agencia) {
 		super();
 		this.numero = numero;
 		this.titular = titular;
 		this.saldo = saldo;
 		this.tipo = tipo;
+		this.agencia = agencia;
 	}
 
 	public double getSaldo() {
@@ -82,6 +88,11 @@ public abstract class Conta implements Aplicacao {
 }
 
 	public void extrato() {
+		
+	}
+
+	public void relatorio() throws IOException {
+		// TODO Auto-generated method stub
 		
 	}
 }
