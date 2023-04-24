@@ -1,22 +1,18 @@
 package pessoa;
 
-import java.util.HashMap;
-
 public abstract class Funcionario extends Pessoa {
 
-	private HashMap<String, Funcionario> listaFuncionarios = new HashMap<String, Funcionario>();
 
-	public Funcionario(String nome, String cpf, int senha, Cargo tipo) {
-		super(nome, cpf, senha, tipo);
+	public Funcionario(String nome, String cpf, int senha) {
+		super(nome, cpf, senha);
+		this.tipo = null;
 
 	}
 
-	public void addNovaConta() {
-	}
 
 	@Override
 	public String toString() {
-		return "Funcionario [nome=" + nome + ", cpf=" + cpf + ", senha=" + senha + ", tipo=" + tipo + "]";
+		return ", nome: " + nome + ", cpf: " + cpf  + ", tipo: " + tipo;
 	}
 
 }

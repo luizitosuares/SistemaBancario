@@ -1,46 +1,66 @@
 package principal;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import contas.Agencias;
 import contas.Conta;
 import contas.ContaCorrente;
 import contas.ContaPoupanca;
-import contas.TipoConta;
 import pessoa.Cargo;
 import pessoa.Cliente;
 import pessoa.Diretor;
 import pessoa.Gerente;
 import pessoa.Pessoa;
 import pessoa.Presidente;
+import utilities.Clear;
 
 public class Menu {
-	ArrayList <Conta> listaCliente = new ArrayList<Conta>();
+
+	ArrayList<Conta> listaCliente = new ArrayList<Conta>();
+
+	Clear c = new Clear();
 	List<Conta> a1 = new ArrayList<Conta>();
 	List<Conta> a2 = new ArrayList<Conta>();
 	List<Conta> a3 = new ArrayList<Conta>();
+
 	public char escolha = ' ';
 	String cpf;
 	String senha;
+	double totalCap = 0.0;
 
 	Scanner read = new Scanner(System.in);
 
 	// MENUS DE PESSOAS //
 
-	// ------------------------------------------//
-
 	// CASO 1: CLIENTE //
 	public void menuCliente(Conta cliente) {
 
-		do {
-
-			System.out.println("\n-------Área do Cliente------");
+		while (escolha != '3') {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println();
+			System.out.println("\nSeja Bem vindo(a): " + cliente.getTitular().getNome());
 			System.out.println("Escolha uma opção: ");
 			System.out.println("1 - Movimentações na Conta.");
 			System.out.println("2 - Relatórios.");
 			System.out.println("3 - Sair.");
+			c.clUp();
 			escolha = read.next().charAt(0);
 
 			switch (escolha) {
@@ -55,134 +75,260 @@ public class Menu {
 
 			case '3':
 				System.out.println("Sistema finalizado.");
+				try {
+					((ContaCorrente) cliente).relatorio();
+				} catch (ClassCastException e) {
+
+				}
+				try {
+					((ContaPoupanca) cliente).relatorio();
+				} catch (ClassCastException e) {
+
+				}
+				atualizacaoConta();
+				escolha = '3';
 				break;
 
 			default:
 				System.out.println("Opção inválida! \n");
-				menuCliente(cliente);
+				break;
 			}
-
-		} while (escolha != 3);
+		}
 	}
 
 	// 1: MOVIMENTAÇÕES NA CONTA CLIENTE//
 	public void movimentacoesCliente(Conta cliente) {
 
-		System.out.println("\nMovimentações da conta");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("a. Saque.");
-		System.out.println("b. Depósito.");
-		System.out.println("c. Transferência.");
-		System.out.println("d. Extrato da conta.");
-		System.out.println("e. Voltar ao menu anterior.");
-		System.out.println("f. Finalizar programa.");
-		escolha = read.next().charAt(0);
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println();
+			System.out.println("\nMovimentações da conta");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saque.");
+			System.out.println("b. Depósito.");
+			System.out.println("c. Transferência.");
+			System.out.println("d. Extrato da conta.");
+			System.out.println("e. Voltar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		switch (escolha) {
+			switch (escolha) {
 
-		case 'a':
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja sacar: ");
+				double valorSaque = read.nextDouble();
+				cliente.sacar(valorSaque);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			System.out.println("Digite o valor que deseja sacar: ");
-			double valorSaque = read.nextDouble();
-			cliente.sacar(valorSaque);
-			menuCliente(cliente);
-			break;
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja depositar: ");
+				double valorDeposito = read.nextDouble();
+				cliente.depositar(valorDeposito);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'b':
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja transferir");
+				double valorTransferencia = read.nextDouble();
+				System.out.println("Escolha o destinatario: ");
+				String destinatario = read.next();
+				for (int i = 0; i < listaCliente.size(); i++) {
+					String cpfList = listaCliente.get(i).getTitular().getCpf();
+					if (destinatario.equals(cpfList)) {
+						Conta destinatario2 = listaCliente.get(i);
+						cliente.transferir(valorTransferencia, destinatario2);
+						break;
 
-			System.out.println("Digite o valor que deseja depositar: ");
-			double valorDeposito = read.nextDouble();
-			cliente.depositar(valorDeposito);
-			menuCliente(cliente);
+					}
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			break;
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Extrato da conta");
+				cliente.extrato();
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'c':
-			System.out.println("Digite o valor que deseja transferir");
-			double valorTransferencia = read.nextDouble();
-			System.out.println("Para quem deseja transferir?");
-			// Conta nome = read.nextLine();
-			// cliente.transferir(valorTransferencia, nome);
-			break;
+			case 'e':
+				atualizacaoConta();
+				break;
 
-		case 'd':
-			System.out.println("Extrato da conta");
-			cliente.extrato();
-			break;
-
-		case 'e':
-			menuCliente(cliente);
-			break;
-
-		case 'f':
-			System.out.println("Programa finalizado.");
-			break;
-
-		default:
-			System.out.println("Opção inválida!");
-			movimentacoesCliente(cliente);
-		}
-
+			default:
+				System.out.println("Opção inválida!");
+			}
+		} while (escolha != 'e');
 	}
 
 	// 2: RELATÓRIOS CLIENTE //
 	public void relatoriosCliente(Conta cliente) {
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println();
+			System.out.println("\nRelatórios");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saldo.");
+			System.out.println("b. Relatório de tributação da conta corrente.");
+			System.out.println("c. Relatório de Rendimento da poupança.");
+			System.out.println("d. Relatório de Seguro.");
+			System.out.println("e. Voltar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		System.out.println("\nRelatórios");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("a. Saldo.");
-		System.out.println("b. Relatório de tributação da conta corrente.");
-		System.out.println("c. Relatório de Rendimento da poupança.");
-		System.out.println("d. Relatório de Seguro.");
-		System.out.println("e. Voltar ao menu anterior.");
-		System.out.println("f. Sair.");
-		escolha = read.next().charAt(0);
+			switch (escolha) {
 
-		switch (escolha) {
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Saldo atual:");
+				System.out.println(cliente.getSaldo());
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'a':
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				try {
+					System.out.println("Relatório de Rendimento Conta Corrente");
+					((ContaCorrente) cliente).OlharRelatorio();
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é corrente");
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
 
-			System.out.println("Saldo atual:");
-			System.out.println(cliente.getSaldo());
-			break;
+				}
 
-		case 'b':
-			try {
-				System.out.println("Relatório de Rendimento Conta Corrente");
-				((ContaCorrente) cliente).OlharRelatorio();
-			} catch (ClassCastException e) {
-				System.out.println("essa conta não é corrente");
-				menuCliente(cliente);
+				break;
+
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				try {
+					System.out.println("Relatório de Rendimento da poupança");
+					((ContaPoupanca) cliente).geraRelatorioRendimento();
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é poupança");
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				}
+				break;
+
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Relatório de Seguro não disponível.");
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
+
+			case 'e':
+				System.out.println("Programa finalizado.");
+				atualizacaoConta();
+				break;
+
+			default:
+				System.out.println("Opção inválida!");
+				relatoriosCliente(cliente);
 			}
-
-			break;
-
-		case 'c':
-			try {
-				System.out.println("Relatório de Rendimento da poupança");
-				((ContaPoupanca) cliente).geraRelatorioRendimento();
-			} catch (ClassCastException e) {
-				System.out.println("essa conta não é poupança");
-				menuCliente(cliente);
-			}
-			break;
-
-		case 'd':
-			System.out.println("Relatório de Seguro não disponível.");
-			break;
-
-		case 'e':
-			menuCliente(cliente);
-			break;
-
-		case 'f':
-			System.out.println("Programa finalizado.");
-			break;
-
-		default:
-			System.out.println("Opção inválida!");
-			relatoriosCliente(cliente);
-		}
+		} while (escolha != 'e');
 
 	}
 
@@ -192,11 +338,19 @@ public class Menu {
 	public void menuGerente(Conta gerente) {
 
 		do {
-
-			System.out.println("\n------- Menu Gerente -------\n");
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println("\nSeja Bem vindo(a): Gerente");
 			System.out.println("1 - Movimentações na Conta");
 			System.out.println("2 - Relatórios");
 			System.out.println("3 - Sair");
+			c.clUp();
 			escolha = read.next().charAt(0);
 
 			switch (escolha) {
@@ -213,142 +367,267 @@ public class Menu {
 			case '3':
 
 				System.out.println("Programafinalizado. \n");
+				try {
+					((ContaCorrente) gerente).relatorio();
+				} catch (ClassCastException e) {
+
+				}
+				try {
+					((ContaPoupanca) gerente).relatorio();
+				} catch (ClassCastException e) {
+
+				}
+				atualizacaoConta();
+				escolha = '3';
 				break;
 
 			default:
 				System.out.println("Opção inválida!\n");
-				menuGerente(gerente);
 			}
 
-		} while (escolha != 3);
+		} while (escolha != '3');
 
 	}
 
 	// 1: MOVIMENTAÇÕES NA CONTA GERENTE//
 	public void movimentacoesGerente(Conta gerente) {
 
-		System.out.println("\nMovimentações da conta");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("a. Saque.");
-		System.out.println("b. Depósito.");
-		System.out.println("c. Transferência.");
-		System.out.println("d. Extrato da conta.");
-		System.out.println("e. Voltar ao menu anterior.");
-		System.out.println("f. Finalizar programa.");
-		escolha = read.next().charAt(0);
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println("\nMovimentações da conta");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saque.");
+			System.out.println("b. Depósito.");
+			System.out.println("c. Transferência.");
+			System.out.println("d. Extrato da conta.");
+			System.out.println("e. Voltar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		switch (escolha) {
+			switch (escolha) {
 
-		case 'a':
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja sacar: ");
+				double valorSaque = read.nextDouble();
+				gerente.sacar(valorSaque);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			System.out.println("Digite o valor que deseja sacar: ");
-			double valorSaque = read.nextDouble();
-			gerente.sacar(valorSaque);
-			menuGerente(gerente);
-			break;
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja depositar: ");
+				double valorDeposito = read.nextDouble();
+				gerente.depositar(valorDeposito);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'b':
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja transferir");
+				double valorTransferencia = read.nextDouble();
+				System.out.println("Escolha o destinatario: ");
+				String destinatario = read.next();
+				for (int i = 0; i < listaCliente.size(); i++) {
+					String cpfList = listaCliente.get(i).getTitular().getCpf();
+					if (destinatario.equals(cpfList)) {
+						Conta destinatario2 = listaCliente.get(i);
+						gerente.transferir(valorTransferencia, destinatario2);
+						break;
 
-			System.out.println("Digite o valor que deseja depositar: ");
-			double valorDeposito = read.nextDouble();
-			gerente.depositar(valorDeposito);
-			menuGerente(gerente);
+					}
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			break;
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Extrato da conta");
+				gerente.extrato();
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'c':
-			System.out.println("Digite o valor que deseja transferir");
-			double valorTransferencia = read.nextDouble();
-			System.out.println("Para quem deseja transferir?");
-			// Conta nome = read.nextLine();
-			// gerente.transferir(valorTransferencia, nome);
-			break;
+			case 'e':
+				atualizacaoConta();
+				break;
 
-		case 'd':
-			System.out.println("Extrato da conta");
-			gerente.extrato();
-			break;
+			default:
+				System.out.println("Opção inválida! \n");
 
-		case 'e':
-			menuGerente(gerente);
-			break;
-
-		case 'f':
-			System.out.println("Programa finalizado.");
-			break;
-
-		default:
-			System.out.println("Opção inválida! \n");
-			movimentacoesGerente(gerente);
-
-		}
-
+			}
+		} while (escolha != 'e');
 	}
 
 	// 2:RELATÓRIOS GERENTE //
 	public void relatoriosGerente(Conta gerente) {
 
-		System.out.println("\nRelatórios");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("a. Saldo.");
-		System.out.println("b. Relatório de tributação da conta corrente.");
-		System.out.println("c. Relatório de Rendimento da poupança.");
-		System.out.println("d. Relatório do número de Agências.");
-		System.out.println("e. Voltar ao menu anterior.");
-		System.out.println("f. Sair.");
-		escolha = read.next().charAt(0);
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println();
+			System.out.println("\nRelatórios");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saldo.");
+			System.out.println("b. Relatório de tributação da conta corrente.");
+			System.out.println("c. Relatório de Rendimento da poupança.");
+			System.out.println("d. Relatório do número de Agências.");
+			System.out.println("e. Voltar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		switch (escolha) {
+			switch (escolha) {
 
-		case 'a':
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Saldo atual:");
+				System.out.println(gerente.getSaldo());
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			System.out.println("Saldo atual:");
-			System.out.println(gerente.getSaldo());
-			break;
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				try {
+					System.out.println("Relatório de Rendimento Conta Corrente");
+					((ContaCorrente) gerente).OlharRelatorio();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é corrente");
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'b':
-			try {
-				System.out.println("Relatório de Rendimento Conta Corrente");
-				((ContaCorrente) gerente).OlharRelatorio();
-			} catch (ClassCastException e) {
-				System.out.println("essa conta não é corrente");
-				menuGerente(gerente);
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				try {
+					System.out.println("Relatório de Rendimento da poupança");
+					((ContaPoupanca) gerente).geraRelatorioRendimento();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é poupança");
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
+
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				if (gerente.getAgencia() == Agencias.A1) {
+					for (Conta p : a1) {
+						System.out.println(p);
+					}
+
+				} else if (gerente.getAgencia() == Agencias.A2) {
+					for (Conta p : a2) {
+						System.out.println(p);
+					}
+
+				} else {
+					for (Conta p : a3) {
+						System.out.println(p);
+					}
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+
+				break;
+
+			case 'e':
+				atualizacaoConta();
+				break;
+
+			default:
+				System.out.println("Opção inválida! \n");
 			}
-
-			break;
-
-		case 'c':
-			try {
-				System.out.println("Relatório de Rendimento da poupança");
-				((ContaPoupanca) gerente).geraRelatorioRendimento();
-			} catch (ClassCastException e) {
-				System.out.println("essa conta não é poupança");
-				menuGerente(gerente);
-			}
-			break;
-
-		case 'd':
-			if ((gerente).getNumeroAgencia() == 1) {
-				
-				
-			}
-			
-				menuGerente(gerente);
-			break;
-
-		case 'e':
-			menuGerente(gerente);
-			break;
-
-		case 'f':
-			System.out.println("Programa finalizado.");
-			break;
-
-		default:
-			System.out.println("Opção inválida! \n");
-			relatoriosGerente(gerente);
-		}
-
+		} while (escolha != 'e');
 	}
 
 	// ------------------------------------------//
@@ -356,158 +635,306 @@ public class Menu {
 	// CASO 3: DIRETOR //
 	public void menuDiretor(Conta diretor) {
 
-		System.out.println("\nAcesso Diretor ");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("1 - Movimentações na Conta");
-		System.out.println("2 - Relatórios");
-		System.out.println("3 - Sair");
-		escolha = read.next().charAt(0);
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println();
+			System.out.println("\nSeja Bem vindo(a): Diretor (a)");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("1 - Movimentações na Conta");
+			System.out.println("2 - Relatórios");
+			System.out.println("3 - Sair");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		switch (escolha) {
+			switch (escolha) {
 
-		case '1':
-			movimentacoesDiretor(diretor);
-			break;
+			case '1':
+				movimentacoesDiretor(diretor);
+				break;
 
-		case '2':
+			case '2':
 
-			relatoriosDiretor(diretor);
-			break;
+				relatoriosDiretor(diretor);
+				break;
 
-		case '3':
+			case '3':
 
-			System.out.println("Programafinalizado. \n");
-			break;
+				System.out.println("Programa finalizado. \n");
+				try {
+					((ContaCorrente) diretor).relatorio();
+				} catch (ClassCastException e) {
 
-		default:
-			System.out.println("Opção inválida!\n");
-			menuDiretor(diretor);
-		}
-		while (escolha != 3)
-			;
+				}
+				try {
+					((ContaPoupanca) diretor).relatorio();
+				} catch (ClassCastException e) {
+
+				}
+				atualizacaoConta();
+				escolha = '3';
+				break;
+
+			default:
+				System.out.println("Opção inválida!\n");
+			}
+		} while (escolha != '3');
 
 	}
 
-	// 1: MOVIMENTAÇÕES NA CONTA Diretor//
+	// 1: MOVIMENTAÇÕES NA CONTA DIRETOR//
 	public void movimentacoesDiretor(Conta diretor) {
 
-		System.out.println("\nMovimentações da conta");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("a. Saque.");
-		System.out.println("b. Depósito.");
-		System.out.println("c. Transferência.");
-		System.out.println("d. Extrato da conta.");
-		System.out.println("e. Voltar ao menu anterior.");
-		System.out.println("f. Finalizar programa.");
-		escolha = read.next().charAt(0);
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println();
+			System.out.println("\nMovimentações da conta");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saque.");
+			System.out.println("b. Depósito.");
+			System.out.println("c. Transferência.");
+			System.out.println("d. Extrato da conta.");
+			System.out.println("e. Voltar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		switch (escolha) {
+			switch (escolha) {
 
-		case 'a':
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja sacar: ");
+				double valorSaque = read.nextDouble();
+				diretor.sacar(valorSaque);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			System.out.println("Digite o valor que deseja sacar: ");
-			double valorSaque = read.nextDouble();
-			diretor.sacar(valorSaque);
-			menuDiretor(diretor);
-			break;
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja depositar: ");
+				double valorDeposito = read.nextDouble();
+				diretor.depositar(valorDeposito);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'b':
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja transferir");
+				double valorTransferencia = read.nextDouble();
+				System.out.println("Escolha o destinatario: ");
+				String destinatario = read.next();
+				for (int i = 0; i < listaCliente.size(); i++) {
+					String cpfList = listaCliente.get(i).getTitular().getCpf();
+					if (destinatario.equals(cpfList)) {
+						Conta destinatario2 = listaCliente.get(i);
+						diretor.transferir(valorTransferencia, destinatario2);
+						break;
 
-			System.out.println("Digite o valor que deseja depositar: ");
-			double valorDeposito = read.nextDouble();
-			diretor.depositar(valorDeposito);
-			menuDiretor(diretor);
+					}
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			break;
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Extrato da conta");
+				diretor.extrato();
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'c':
-			System.out.println("Digite o valor que deseja transferir");
-			double valorTransferencia = read.nextDouble();
-			System.out.println("Para quem deseja transferir?");
-			// Conta nome = read.nextLine();
-			// gerente.transferir(valorTransferencia, nome);
-			break;
+			case 'e':
+				atualizacaoConta();
+				break;
 
-		case 'd':
-			System.out.println("Extrato da conta");
-			diretor.extrato();
-			break;
+			default:
+				System.out.println("Opção inválida! \n");
 
-		case 'e':
-			menuDiretor(diretor);
-			break;
-
-		case 'f':
-			System.out.println("Programa finalizado.");
-			break;
-
-		default:
-			System.out.println("Opção inválida! \n");
-			movimentacoesDiretor(diretor);
-
-		}
+			}
+		} while (escolha != 'e');
 
 	}
 
+	// 2: RELATÓRIOS DIRETOR//
 	public void relatoriosDiretor(Conta diretor) {
 
-		System.out.println("\nRelatórios");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("a. Saldo.");
-		System.out.println("b. Relatório de tributação da conta corrente.");
-		System.out.println("c. Relatório de Rendimento da poupança.");
-		System.out.println("d. Relatório de Agências.");
-		System.out.println("e. Voltar ao menu anterior.");
-		System.out.println("f. Sair.");
-		escolha = read.next().charAt(0);
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println();
+			System.out.println("\nRelatórios");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saldo.");
+			System.out.println("b. Relatório de tributação da conta corrente.");
+			System.out.println("c. Relatório de Rendimento da poupança.");
+			System.out.println("d. Relatório de Agências.");
+			System.out.println("e. Voltar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		switch (escolha) {
+			switch (escolha) {
 
-		case 'a':
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Saldo atual:");
+				System.out.println(diretor.getSaldo());
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			System.out.println("Saldo atual:");
-			System.out.println(diretor.getSaldo());
-			break;
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				try {
+					System.out.println("Relatório de Rendimento Conta Corrente");
+					((ContaCorrente) diretor).OlharRelatorio();
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é corrente");
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				}
 
-		case 'b':
-			try {
-				System.out.println("Relatório de Rendimento Conta Corrente");
-				((ContaCorrente) diretor).OlharRelatorio();
-			} catch (ClassCastException e) {
-				System.out.println("essa conta não é corrente");
-				menuDiretor(diretor);
+				break;
+
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				try {
+					System.out.println("Relatório de Rendimento da poupança");
+					((ContaPoupanca) diretor).geraRelatorioRendimento();
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é poupança");
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				}
+				break;
+
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				Collections.sort(listaCliente, new Comparator<Conta>() {
+
+					@Override
+					public int compare(Conta o1, Conta o2) {
+						String nome1 = o1.getTitular().getNome();
+						String nome2 = o2.getTitular().getNome();
+						return nome1.compareTo(nome2);
+					}
+
+				});
+
+				for (Conta p : listaCliente) {
+
+					System.out.println(p);
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
+
+			case 'e':
+				atualizacaoConta();
+				break;
+
+			default:
+				System.out.println("Opção inválida! \n");
 			}
-
-			break;
-
-		case 'c':
-			try {
-				System.out.println("Relatório de Rendimento da poupança");
-				((ContaPoupanca) diretor).geraRelatorioRendimento();
-			} catch (ClassCastException e) {
-				System.out.println("essa conta não é poupança");
-				menuDiretor(diretor);
-			}
-			break;
-
-		case 'd':
-			System.out.println("Relatório de Contas não disponível.\n");
-			menuDiretor(diretor);
-			break;
-
-		case 'e':
-			menuDiretor(diretor);
-			break;
-
-		case 'f':
-			System.out.println("Programa finalizado.");
-			break;
-
-		default:
-			System.out.println("Opção inválida! \n");
-			relatoriosDiretor(diretor);
-		}
-
+		} while (escolha != 'e');
 	}
 
 	// ------------------------------------------//
@@ -515,87 +942,301 @@ public class Menu {
 	// CASO 4: PRESIDENTE //
 	public void menuPresidente(Conta presidente) {
 
-		System.out.println("\n Acesso Presidente Banco JK");
-		System.out.println("Escolha uma opção: \n");
-		System.out.println("1 - Movimentações na Conta");
-		System.out.println("2 - Relatórios");
-		System.out.println("3 - Sair");
-		escolha = read.next().charAt(0);
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println("\nSeja Bem vindo(a): Presidente");
+			System.out.println("Escolha uma opção: \n");
+			System.out.println("1 - Movimentações na Conta");
+			System.out.println("2 - Relatórios");
+			System.out.println("3 - Sair");
+			c.clUp();
+			escolha = read.next().charAt(0);
 
-		switch (escolha) {
+			switch (escolha) {
 
-		case '1':
-			movimentacoesPresidente(presidente);
-			break;
+			case '1':
+				movimentacoesPresidente(presidente);
+				break;
 
-		case '2':
+			case '2':
+				relatoriosPresidente(presidente);
+				break;
 
-			break;
+			case '3':
+				System.out.println("Sistema encerrado");
+				try {
+					((ContaCorrente) presidente).relatorio();
+				} catch (ClassCastException e) {
 
-		case '3':
-			break;
+				}
+				try {
+					((ContaPoupanca) presidente).relatorio();
+				} catch (ClassCastException e) {
 
-		}
+				}
+				atualizacaoConta();
+				escolha = '3';
+				break;
+
+			}
+		} while (escolha != '3');
 	}
 
-	// 1: MOVIMENTAÇÕES NA CONTA Presidente//
+	// 1: MOVIMENTAÇÕES NA CONTA PRESIDENTE//
 	public void movimentacoesPresidente(Conta presidente) {
 
-		System.out.println("Movimentações na conta. ");
-		System.out.println("Escolha uma opção: ");
-		System.out.println("a. Saque.");
-		System.out.println("b. Depósito.");
-		System.out.println("c. Transferência.");
-		System.out.println("d. Extrato da conta.");
-		System.out.println("e. Retornar ao menu anterior.");
-		System.out.println("f. Finalizar programa.");
-		escolha = read.next().charAt(0);
-		switch (escolha) {
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println("Movimentações na conta. ");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saque.");
+			System.out.println("b. Depósito.");
+			System.out.println("c. Transferência.");
+			System.out.println("d. Extrato da conta.");
+			System.out.println("e. Retornar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
+			switch (escolha) {
 
-		case 'a':
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor do saque");
+				double valor = read.nextDouble();
+				presidente.sacar(valor);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
 
-			System.out.println("Digite o valor do saque");
-			double valor = read.nextDouble();
-			presidente.sacar(valor);
-			menuPresidente(presidente);
+				break;
 
-			break;
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor do deposito");
+				double valorDeposito = read.nextDouble();
+				presidente.depositar(valorDeposito);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'b':
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Digite o valor que deseja transferir");
+				double valorTransferencia = read.nextDouble();
+				System.out.println("Escolha o destinatario: ");
+				String destinatario = read.next();
+				for (int i = 0; i < listaCliente.size(); i++) {
+					String cpfList = listaCliente.get(i).getTitular().getCpf();
+					if (destinatario.equals(cpfList)) {
+						Conta destinatario2 = listaCliente.get(i);
+						presidente.transferir(valorTransferencia, destinatario2);
+						break;
 
-			System.out.println("Digite o valor do deposito");
-			double valorDeposito = read.nextDouble();
-			presidente.depositar(valorDeposito);
-			menuPresidente(presidente);
+					}
+				}
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-			break;
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				presidente.extrato();
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
 
-		case 'c':
-			System.out.println("Digite o valor que deseja transferir");
-			double valorTransferencia = read.nextDouble();
-			presidente.transferir(100.00, presidente);
-			break;
+			case 'e':
+				atualizacaoConta();
+				break;
 
-		case 'd':
-			presidente.extrato();
-			break;
+			default:
 
-		case 'e':
-			menuPresidente(presidente);
-			break;
-		case 'f':
-			System.out.println("Programa finalizado !");
-			break;
+				System.out.println("Opção inválida!");
 
-		default:
+			}
+		} while (escolha != 'e');
 
-			System.out.println("Opção inválida!");
-			menuPresidente(presidente);
+	}
 
-		}
-		while (escolha != 'f')
-			;
+	// 2: MOVIMENTAÇÕES NA CONTA PRESIDENTE//
+	public void relatoriosPresidente(Conta presidente) {
 
+		do {
+			c.cls();
+			System.out.println(" ______                            _______ _       \r\n"
+					+ "(____  \\                          (_______) |      \r\n"
+					+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+					+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+					+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+					+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+					+ "                                                   ");
+			System.out.println("\nRelatórios");
+			System.out.println("Escolha uma opção: ");
+			System.out.println("a. Saldo.");
+			System.out.println("b. Relatório de tributação da conta corrente.");
+			System.out.println("c. Relatório de Rendimento da poupança.");
+			System.out.println("d. Relatório capital total Banco JK.");
+			System.out.println("e. Relatório Clientes.");
+			System.out.println("f. Voltar ao menu anterior.");
+			c.clUp();
+			escolha = read.next().charAt(0);
+
+			switch (escolha) {
+
+			case 'a':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.println("Saldo atual:");
+				System.out.println(presidente.getSaldo());
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
+
+			case 'b':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				try {
+					System.out.println();
+					System.out.println("Relatório de Rendimento Conta Corrente");
+					((ContaCorrente) presidente).OlharRelatorio();
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é corrente");
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				}
+
+				break;
+
+			case 'c':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				try {
+					System.out.println();
+					System.out.println("Relatório de Rendimento da poupança");
+					((ContaPoupanca) presidente).geraRelatorioRendimento();
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				} catch (ClassCastException e) {
+					System.out.println("essa conta não é poupança");
+					c.clUp();
+					System.out.println("digite 's' para continuar");
+					read.next();
+				}
+				break;
+
+			case 'd':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				System.out.println();
+				System.out.printf("O valor total de capital do banco JK é: %.2f%n", totalCap);
+				c.clUp();
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
+
+			case 'e':
+				c.cls();
+				System.out.println(" ______                            _______ _       \r\n"
+						+ "(____  \\                          (_______) |      \r\n"
+						+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+						+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+						+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+						+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+						+ "                                                   ");
+				for (Conta p : listaCliente) {
+
+					System.out.println(p);
+				}
+				System.out.println("digite 's' para continuar");
+				read.next();
+				break;
+			case 'f':
+				atualizacaoConta();
+				break;
+
+			default:
+				System.out.println("Opção inválida! \n");
+			}
+		} while (escolha != 'f');
 	}
 
 	// ------------------------------------------//
@@ -605,52 +1246,158 @@ public class Menu {
 	public void ChamaMenu()
 
 	{
-		System.out.println("------------------------------------------------------------------");
-		System.out.println("--------------------- Sistema Bancário JK  -----------------------");
-		System.out.println("------------------------------------------------------------------\n");
+		System.out.println(" ______                            _______ _       \r\n"
+				+ "(____  \\                          (_______) |      \r\n"
+				+ " ____)  )_____ ____   ____ ___         _  | |  _   \r\n"
+				+ "|  __  ((____ |  _ \\ / ___) _ \\    _  | | | |_/ )  \r\n"
+				+ "| |__)  ) ___ | | | ( (__| |_| |  | |_| | |  _ (   \r\n"
+				+ "|______/\\_____|_| |_|\\____)___/    \\___/  |_| \\_)  \r\n"
+				+ "                                                   ");
 
-		Pessoa pessoa1 = new Diretor("Isabel", "789456123", 4640, Cargo.DIRETOR, 2);
-		Conta conta1 = new ContaCorrente(22, pessoa1, 2000.00, TipoConta.CONTA_CORRENTE, Agencias.A1);
-		a1.add(conta1);
-		System.out.println(conta1.toString());
+		String path = "C:\\TrabalhoFinalPOO\\pessoas\\Pessoas.txt\\";
+		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+			String line = br.readLine();
 
-		Pessoa pessoa2 = new Presidente("Santiago", "123456789", 1234, Cargo.PRESIDENTE, 2);
-		Conta conta2 = new ContaPoupanca(23, pessoa2, 3000.00, TipoConta.CONTA_POUPANCA, Agencias.A2);
-		a2.add(conta2);
-		System.out.println(conta2.toString());
+			line = br.readLine();
+			while (line != null) {
+				String[] vect = line.split(",");
+				String nome = vect[0];
+				String cpf = vect[1];
+				Integer senha = Integer.parseInt(vect[2]);
+				Integer numero = Integer.parseInt(vect[3]);
+				Double saldo = Double.parseDouble(vect[4]);
+				String cargo = vect[5];
+				String tipoConta = vect[6];
+				String agencia = vect[7];
+				Agencias agenciaEnum;
+				Pessoa pessoa = null;
+				Conta conta = null;
 
-		Pessoa pessoa3 = new Cliente("Isabel", "789456122", 4640, Cargo.CLIENTE);
-		Conta conta3 = new ContaCorrente(25, pessoa3, 2000.00, TipoConta.CONTA_CORRENTE, Agencias.A3);
-		a3.add(conta3);
-		listaCliente.add(conta3);
-		System.out.println(conta3.toString());
+				if (agencia.equals("A1")) {
+					agenciaEnum = Agencias.A1;
+				} else if (agencia.equals("A2")) {
+					agenciaEnum = Agencias.A2;
+				} else {
+					agenciaEnum = Agencias.A3;
+				}
+				switch (cargo) {
+				case "CLIENTE":
+					pessoa = new Cliente(nome, cpf, senha);
+					break;
 
-		Pessoa pessoa4 = new Gerente("Luiz", "147258369", 4640, Cargo.GERENTE, 2);
-		Conta conta4 = new ContaCorrente(24, pessoa4, 1000.00, TipoConta.CONTA_CORRENTE,Agencias.A2);
-		a2.add(conta4);
-		System.out.println(conta4.toString());
+				case "GERENTE":
+					pessoa = new Gerente(nome, cpf, senha);
+					break;
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Digite seu CPF: ");
-		String cpf = scanner.nextLine();
+				case "DIRETOR":
+					pessoa = new Diretor(nome, cpf, senha);
+					break;
 
-		System.out.println("Digite sua senha: ");
-		int senha = scanner.nextInt();
+				case "PRESIDENTE":
+					pessoa = new Presidente(nome, cpf, senha);
+					break;
 
-		if (pessoa1.getCpf().equals(cpf) && pessoa1.getSenha() == senha) {
-			System.out.println("Seja Bem vindo(a): " + Cargo.DIRETOR);
-			menuDiretor(conta1);
-		} else if (pessoa2.getCpf().equals(cpf) && pessoa2.getSenha() == senha) {
-			System.out.println("Seja Bem vindo(a): " + Cargo.PRESIDENTE);
-			menuPresidente(conta2);
-		} else if (pessoa3.getCpf().equals(cpf) && pessoa3.getSenha() == senha) {
-			System.out.println("Seja Bem vindo(a): " + pessoa3.getNome());
-			menuCliente(conta3);
-		} else if (pessoa4.getCpf().equals(cpf) && pessoa4.getSenha() == senha) {
-			System.out.println("Seja Bem vindo(a): " + Cargo.GERENTE);
-			menuGerente(conta4);
-		} else {
-			System.out.println("CPF ou senha incorretos. Tente novamente.");
+				default:
+					break;
+				}
+				switch (tipoConta) {
+				case "CONTA_CORRENTE":
+					conta = new ContaCorrente(numero, pessoa, saldo, agenciaEnum);
+					break;
+				case "CONTA_POUPANCA":
+					conta = new ContaPoupanca(numero, pessoa, saldo, agenciaEnum);
+					break;
+				default:
+					break;
+				}
+				totalCap += conta.getSaldo();
+				listaCliente.add(conta);
+				switch (agenciaEnum) {
+				case A1:
+					a1.add(conta);
+					break;
+				case A2:
+					a2.add(conta);
+					break;
+				case A3:
+					a3.add(conta);
+					break;
+
+				default:
+					break;
+				}
+
+				line = br.readLine();
+			}
+			int encontrei = 1;
+			do {
+				Scanner scanner = new Scanner(System.in);
+				System.out.println("Digite seu CPF: ");
+				String input_cpf = scanner.next();
+
+				System.out.println("Digite sua senha: ");
+				int input_senha = scanner.nextInt();
+
+				for (int i = 0; i < listaCliente.size(); i++) {
+					String cpfLista = listaCliente.get(i).getTitular().getCpf();
+					int senhaLista = listaCliente.get(i).getTitular().getSenha();
+					Cargo cargoLista = listaCliente.get(i).getTitular().getTipo();
+
+					if (cpfLista.equals(input_cpf) && senhaLista == input_senha) {
+
+						switch (cargoLista) {
+						case CLIENTE:
+							menuCliente(listaCliente.get(i));
+							encontrei += 1;
+							break;
+						case GERENTE:
+							menuGerente(listaCliente.get(i));
+							encontrei += 1;
+							break;
+						case DIRETOR:
+							menuDiretor(listaCliente.get(i));
+							encontrei += 1;
+							break;
+						case PRESIDENTE:
+							menuPresidente(listaCliente.get(i));
+							encontrei += 1;
+							break;
+						}
+						break;
+					}
+				}
+				encontrei -= 1;
+				System.out.println("Senha ou Cpf incorretos");
+			} while (encontrei != 1);
+
+		} catch (Exception e) {
+			System.out.println("Error: linha invalida" + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public void atualizacaoConta() {
+
+		String path = "C:\\TrabalhoFinalPOO\\pessoas\\Pessoas.txt\\";
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+			bw.newLine();
+			for (int i = 0; i < listaCliente.size(); i++) {
+				String nomeLista = listaCliente.get(i).getTitular().getNome();
+				String cpfLista = listaCliente.get(i).getTitular().getCpf();
+				int senhaLista = listaCliente.get(i).getTitular().getSenha();
+				int numeroLista = listaCliente.get(i).getNumero();
+				double saldoLista = listaCliente.get(i).getSaldo();
+				Cargo cargoLista = listaCliente.get(i).getTitular().getTipo();
+				String contaLista = listaCliente.get(i).getTipo().name();
+				String agenciaLista = listaCliente.get(i).getAgencia().name();
+
+				bw.write(nomeLista + "," + cpfLista + "," + senhaLista + "," + numeroLista + "," + saldoLista + ","
+						+ cargoLista + "," + contaLista + "," + agenciaLista);
+				bw.newLine();
+			}
+
+		} catch (IOException e) {
+			System.out.println("Error:" + e.getMessage());
 		}
 	}
 
