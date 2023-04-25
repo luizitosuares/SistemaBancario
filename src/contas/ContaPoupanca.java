@@ -55,8 +55,15 @@ public class ContaPoupanca extends Conta {
 		montante = valorAplicado*(Math.pow((1+TAXA_RENDIMENTO),diasInvestidos));
 		rendimento = montante - valorAplicado;
 		
+		 System.out.println("----------- SIMULADOR DE RENDIMENTOS POUPANÇA -----------\n");
+		 System.out.printf("             Valor Aplicado : R$ %.2f%n", valorAplicado);
+		 System.out.printf("             Quantidade de dias: %d%n", diasInvestidos);
+		 System.out.printf("             Montante ao final do período : R$ %.2f%n", montante);
+		 System.out.printf("             Rendimento: R$ %.2f%n", rendimento);
+		 System.out.println();
+		
 		return rendimento;
-
+		
 	}
 
 	public boolean sacar(double valor) {
@@ -91,11 +98,13 @@ public class ContaPoupanca extends Conta {
 		}
 
 	}
+	
 	public boolean transferido(double valor) {
 		if (valor <= 0) {
 			return false;
 		} else {
 			this.saldo += valor;
+			contaP.add(sdf.format(date) + " Transferência " + valor);
 			return true;
 		}
 	}
@@ -114,7 +123,7 @@ public class ContaPoupanca extends Conta {
 			destino.transferido(valor);
 			System.out.println("Transferência realizada com sucesso!");
 			System.out.println("Data: " + sdf.format(date));
-			contaP.add(sdf.format(date) + " Tranferencia " + valor);
+			contaP.add(sdf.format(date) + " Tranferência " + valor);
 			return true;
 		}
 		return false;
@@ -123,7 +132,7 @@ public class ContaPoupanca extends Conta {
 	public void extrato() {
 
 		System.out.println("Extrato atual de conta poupanca");
-		System.out.println("Agência: " + "1" + "     conta: " + getNumero());
+		System.out.println("Agência: " + getAgencia() + "     conta: " + getNumero());
 		System.out.println("Cliente: " + ((Pessoa) (titular)).getNome());
 		for (String i : contaP) {
 			System.out.println(i);
@@ -146,6 +155,14 @@ public class ContaPoupanca extends Conta {
 	        gravarArq.printf("             Quantidade de dias: %d%n", diasInvestidos);
 	        gravarArq.printf("             Montante ao final do período : R$ %.2f%n", montante);
 	        gravarArq.printf("             Rendimento: R$ %.2f%n", rendimento);
+	        gravarArq.println();
+	        gravarArq.println("-----------Extrato atual de conta poupanca-----");
+	        gravarArq.println();
+	        gravarArq.println("Agência: " + getAgencia() + "     conta: " + getNumero());
+	        gravarArq.println("Cliente: " + ((Pessoa) (titular)).getNome());
+	        for (String i : contaP) {
+				gravarArq.println(i);
+			}
 	        	        
 	        arq.close();
 	        
